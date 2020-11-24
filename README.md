@@ -1,0 +1,1 @@
+# open5gs_epc_oai_sample_config
