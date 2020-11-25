@@ -19,6 +19,7 @@ This briefly describes the overall and configuration files.
 - [Network settings of Open5GS EPC and OAI UE / RAN](#network_settings)
   - [Network settings of Open5GS EPC U-Plane1](#network_settings_up1)
   - [Network settings of Open5GS EPC U-Plane2](#network_settings_up2)
+  - [Network settings of OAI UE / RAN](#network_settings_oai)
 - [Build Open5GS and OAI UE / RAN](#build)
 - [Run Open5GS EPC and OAI UE / RAN](#run)
   - [Run Open5GS EPC U-Plane1 & U-Plane2](#run_up)
@@ -563,6 +564,12 @@ ip addr add cafe::3/64 dev ogstun3
 ip link set ogstun3 up
 
 iptables -t nat -A POSTROUTING -s 10.47.0.0/16 ! -o ogstun3 -j MASQUERADE
+```
+
+<h3 id="network_settings_oai">Network settings of OAI UE / RAN</h3>
+
+```
+ifconfig lo: 127.0.0.2 netmask 255.0.0.0 up
 ```
 
 <h2 id="build">Build Open5GS and OAI UE / RAN</h2>
