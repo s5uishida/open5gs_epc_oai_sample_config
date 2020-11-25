@@ -67,11 +67,11 @@ Subscriber Information (other information is the same) is as follows.
 I registered these information with the Open5GS WebUI.
 
 Each PDNs are as follows.
-| U-Plane # | TUNnel interface of U-Plane | PDN | APN | TUNnel interface of UE |
+| PDN | TUNnel interface of PDN | APN | TUNnel interface of UE | U-Plane # |
 | --- | --- | --- | --- | --- |
-| U-Plane1 | ogstun | 10.45.0.0/16 | internet | oip1 |
-| U-Plane1 | ogstun2 | 10.46.0.0/16 | internet2 | oip2, oip3 |
-| U-Plane2 | ogstun3 | 10.47.0.0/16 | ims | oip4, oip5 |
+| 10.45.0.0/16 | ogstun | internet | oip1 | U-Plane1 |
+| 10.46.0.0/16 | ogstun2 | internet2 | oip2, oip3 | U-Plane1 |
+| 10.47.0.0/16 | ogstun3 | ims | oip4, oip5 | U-Plane2 |
 
 <h2 id="changes">Changes in configuration files of Open5GS EPC and OAI UE / RAN</h2>
 
