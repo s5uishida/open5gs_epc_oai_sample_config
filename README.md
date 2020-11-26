@@ -21,8 +21,8 @@ This briefly describes the overall and configuration files.
   - [Network settings of OAI UE / RAN](#network_settings_oai)
 - [Build Open5GS and OAI UE / RAN](#build)
 - [Run Open5GS EPC and OAI UE / RAN](#run)
-  - [Run Open5GS EPC U-Plane1 & U-Plane2](#run_up)
   - [Run Open5GS EPC C-Plane](#run_cp)
+  - [Run Open5GS EPC U-Plane1 & U-Plane2](#run_up)
   - [Run OAI RAN](#run_ran)
   - [Run OAI 5 UEs](#run_ue)
 - [Ping google.com](#ping)
@@ -578,24 +578,9 @@ The following is an example of building eNB.
 
 First run the EPC, then the RAN, and the UE.
 
-<h3 id="run_up">Run Open5GS EPC U-Plane1 & U-Plane2</h3>
-
-Run Open5GS EPC U-Plane before the C-Plane.
-
-- Open5GS EPC U-Plane1
-```
-./install/bin/open5gs-sgwud &
-./install/bin/open5gs-upfd &
-```
-- Open5GS EPC U-Plane2
-```
-./install/bin/open5gs-sgwud &
-./install/bin/open5gs-upfd &
-```
-
 <h3 id="run_cp">Run Open5GS EPC C-Plane</h3>
 
-Next, run the C-Plane.
+First, run Open5GS EPC C-Plane.
 In addition, when run SMF (PGW-C), NRF also runs because it connects to NRF for registration as a function of 5GC of SMF.
 By changing the configuration file, it is no longer necessary to run NRF, but for the sake of simplicity, I will leave it as it is here.
 
@@ -608,6 +593,21 @@ sleep 5
 ./install/bin/open5gs-smfd &
 ./install/bin/open5gs-hssd &
 ./install/bin/open5gs-pcrfd &
+```
+
+<h3 id="run_up">Run Open5GS EPC U-Plane1 & U-Plane2</h3>
+
+Next, run Open5GS EPC U-Plane.
+
+- Open5GS EPC U-Plane1
+```
+./install/bin/open5gs-sgwud &
+./install/bin/open5gs-upfd &
+```
+- Open5GS EPC U-Plane2
+```
+./install/bin/open5gs-sgwud &
+./install/bin/open5gs-upfd &
 ```
 
 <h3 id="run_ran">Run OAI RAN</h3>
