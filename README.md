@@ -15,7 +15,6 @@ This briefly describes the overall and configuration files.
   - [Changes in configuration files of OAI UE / RAN](#changes_oai)
     - [Changes in configuration files of UE](#changes_ue)
     - [Changes in configuration files of RAN](#changes_ran)
-- [Note about building Open5GS EPC and OAI UE / RAN](#note)
 - [Network settings of Open5GS EPC and OAI UE / RAN](#network_settings)
   - [Network settings of Open5GS EPC U-Plane1](#network_settings_up1)
   - [Network settings of Open5GS EPC U-Plane2](#network_settings_up2)
@@ -527,14 +526,6 @@ parameter:
         local_s_portd    = 50011;
 ```
 
-<h2 id="note">Note about building Open5GS EPC and OAI UE / RAN</h2>
-
-When building OAI UE / RAN, add `-I` to the parameter of the` build_oai` command for the first time.
-The following is an example of building eNB.
-```
-./build_oai -I --eNB -t ETHERNET -c
-```
-
 <h2 id="network_settings">Network settings of Open5GS EPC and OAI UE / RAN</h2>
 
 <h3 id="network_settings_up1">Network settings of Open5GS EPC U-Plane1</h3>
@@ -578,6 +569,11 @@ Please refer to the following for building Open5GS and OAI UE / RAN respectively
 - Open5GS v2.0.22 or later - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
 - OAI UE / RAN v1.0.3 - https://gitlab.eurecom.fr/oai/openairinterface5g/-/wikis/l2-nfapi-simulator/l2-nfapi-simulator-w-S1-same-machine
 
+Note. When building OAI UE / RAN, add `-I` to the parameter of the` build_oai` command for the first time.
+The following is an example of building eNB.
+```
+./build_oai -I --eNB -t ETHERNET -c
+```
 <h2 id="run">Run Open5GS EPC and OAI UE / RAN</h2>
 
 First run the EPC, then the RAN, and the UE.
