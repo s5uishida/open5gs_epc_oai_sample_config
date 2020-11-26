@@ -45,12 +45,12 @@ The EPC / UE / RAN used are as follows.
 - UE / RAN - OpenAirInterface(OAI) v1.0.3 - https://gitlab.eurecom.fr/oai/openairinterface5g/-/tree/v1.0.3
 
 Each VMs are as follows.  
-| VM # | SW & Role | IP address | OS |
-| --- | --- | --- | --- |
-| VM1 | Open5GS EPC C-Plane | 192.168.0.111/24 | Ubuntu 20.04 |
-| VM2 | Open5GS EPC U-Plane1  | 192.168.0.112/24 | Ubuntu 20.04 |
-| VM3 | Open5GS EPC U-Plane2  | 192.168.0.113/24 | Ubuntu 20.04 |
-| VM4 | OpenAirInterface UE / RAN | 192.168.0.120/24 | Ubuntu 18.04 |
+| VM # | SW & Role | IP address | OS | Memory (Min) |
+| --- | --- | --- | --- | --- |
+| VM1 | Open5GS EPC C-Plane | 192.168.0.111/24 | Ubuntu 20.04 | 1GB |
+| VM2 | Open5GS EPC U-Plane1  | 192.168.0.112/24 | Ubuntu 20.04 | 1GB |
+| VM3 | Open5GS EPC U-Plane2  | 192.168.0.113/24 | Ubuntu 20.04 | 1GB |
+| VM4 | OpenAirInterface UE / RAN | 192.168.0.120/24 | Ubuntu 18.04 | 2GB |
 
 OAI UE / RAN cannot be built on Ubuntu 20.04, so build it on Ubuntu 18.04.
 
