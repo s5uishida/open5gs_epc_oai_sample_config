@@ -55,13 +55,13 @@ Each VMs are as follows.
 OAI UE / RAN cannot be built on Ubuntu 20.04, so build it on Ubuntu 18.04.
 
 Subscriber Information (other information is the same) is as follows.  
-| UE # | IMSI | APN |
-| --- | --- | --- |
-| UE0 | 001010000000100 | internet |
-| UE1 | 001010000000101 | internet2 |
-| UE2 | 001010000000102 | internet2 |
-| UE3 | 001010000000103 | ims |
-| UE4 | 001010000000104 | ims |
+| UE # | IMSI | APN | OP/OPc |
+| --- | --- | --- | --- |
+| UE0 | 001010000000100 | internet | OPc |
+| UE1 | 001010000000101 | internet2 | OPc |
+| UE2 | 001010000000102 | internet2 | OPc |
+| UE3 | 001010000000103 | ims | OPc |
+| UE4 | 001010000000104 | ims | OPc |
 
 I registered these information with the Open5GS WebUI.
 
