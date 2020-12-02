@@ -37,7 +37,7 @@ I created a CUPS-enabled EPC mobile network (Internet reachable) for simulation 
 The following minimum configuration was set as a condition.
 - C-Plane have multiple U-Planes.
 - U-Plane have multiple PDNs.
-- Multiple UEs connect to one PDN.
+- Multiple UEs connect to same PDN.
 
 The built simulation environment is as follows.
 
