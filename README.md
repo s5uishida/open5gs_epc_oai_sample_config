@@ -751,12 +751,12 @@ The result of `ip addr show` on VM4 (OAI UE) is as follows.
 
 <h2 id="ping">Ping google.com</h2>
 
-Specify the TUN interface on VM4 (UE) and try `ping`.
+Specify the TUN interface on VM4 (UE0) and try `ping`.
 
 <h3 id="ping_1">Case for going through PDN 10.45.0.0/16</h3>
 
 Execute `tcpdump` on VM2 (U-Plane1) and check that the packet goes through `if=ogstun`.
-- `ping google.com` on VM4 (UE)
+- `ping google.com` on VM4 (UE0)
 ```
 # ping google.com -I oip1
 PING google.com (172.217.161.206) from 10.45.0.2 oip1: 56(84) bytes of data.
