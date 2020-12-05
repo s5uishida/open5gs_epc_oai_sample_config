@@ -91,6 +91,14 @@ Please refer to the following for building Open5GS and OAI UE / RAN respectively
 
 <h3 id="changes_cp">Changes in configuration files of Open5GS EPC C-Plane</h3>
 
+The following parameters including APN can be used in the logic that selects SGW-U as the connection destination by PFCP.
+
+- APN
+- TAC (Tracking Area Code)
+- e_CellID
+
+For the sake of simplicity, I used only APN this time. Please refer to [here](https://github.com/open5gs/open5gs/pull/560#issue-483001043) for the logic to select SGW-U.
+
 - `open5gs/install/etc/open5gs/mme.yaml`
 ```diff
 --- mme.yaml.orig       2020-11-22 14:02:40.000000000 +0000
