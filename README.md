@@ -613,7 +613,7 @@ Note. Install MongoDB with package manager on Open5GS EPC C-Plane machine.
 ```
 It is not necessary to install MongoDB on Open5GS EPC U-Plane machines.
 
-Note. When building OAI UE / RAN, add `-I` to the parameter of the` build_oai` command for the first time.
+Note. When building OAI UE / RAN, add `-I` to the parameter of the `build_oai` command for the first time.
 The following is an example of building eNB.
 ```
 ./build_oai -I --eNB -t ETHERNET -c
