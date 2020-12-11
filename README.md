@@ -69,6 +69,7 @@ Subscriber Information (other information is the same) is as follows.
 | UE4 | 001010000000104 | ims | OPc |
 
 I registered these information with the Open5GS WebUI.
+In addition, [3GPP TS 35.208](https://www.3gpp.org/DynaReport/35208.htm) "4.3 Test Sets" is published by 3GPP as test data for the 3GPP authentication and key generation functions (MILENAGE).
 
 Each PDNs are as follows.
 | PDN | TUNnel interface of PDN | APN | TUNnel interface of UE | U-Plane # |
