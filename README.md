@@ -606,6 +606,7 @@ Please refer to the following for building Open5GS and OAI UE / RAN respectively
 - OAI UE / RAN v1.0.3 - https://gitlab.eurecom.fr/oai/openairinterface5g/-/wikis/l2-nfapi-simulator/l2-nfapi-simulator-w-S1-same-machine
 
 Note. Install MongoDB with package manager on Open5GS EPC C-Plane machine.
+[MongoDB Compass](https://www.mongodb.com/products/compass) is a convenient tool to look at the MongoDB database.
 ```
 # apt update
 # apt install mongodb
