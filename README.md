@@ -660,9 +660,7 @@ Next, run Open5GS EPC U-Plane.
 
 Run OAI eNB and connect to Open5GS EPC.
 ```
-# cd ~/enb_folder
-# source oaienv
-# cd cmake_targets
+# cd ~/enb_folder/cmake_targets
 # ./lte_build_oai/build/lte-softmodem -O ../ci-scripts/conf_files/rcc.band7.tm1.nfapi.conf 2>&1 | tee enb.log
 ```
 The Open5GS C-Plane log when executed is as follows.
@@ -677,11 +675,9 @@ The Open5GS C-Plane log when executed is as follows.
 Run OAI 5 UEs and connect to Open5GS EPC.
 Add `--num-ues 5` to the parameter to use 5 UEs.
 ```
-# cd ~/ue_folder
-# source oaienv
-# cd cmake_targets/tools
+# cd ~/ue_folder/cmake_targets/tools
 # source init_nas_s1 UE
-# cd ~/ue_folder/cmake_targets
+# cd ..
 # ./lte_build_oai/build/lte-uesoftmodem -O ../ci-scripts/conf_files/ue.nfapi.conf --L2-emul 3 --num-ues 5 2>&1 | tee ue.log
 ```
 The Open5GS C-Plane log when executed is as follows.
