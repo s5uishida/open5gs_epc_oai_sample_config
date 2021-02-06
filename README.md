@@ -46,7 +46,7 @@ The built simulation environment is as follows.
 Note. The PDN end-point addresses assigned to `oipX` TUNnel interfaces are not always in the order shown in the figure above.
 
 The EPC / UE / RAN used are as follows.
-- EPC - Open5GS v2.0.22 or later - https://github.com/open5gs/open5gs
+- EPC - Open5GS v2.0.22 or later (v2.0.22 used) - https://github.com/open5gs/open5gs
 - UE / RAN - OpenAirInterface(OAI) v1.0.3 - https://gitlab.eurecom.fr/oai/openairinterface5g/-/tree/v1.0.3
 
 Each VMs are as follows.  
@@ -87,7 +87,7 @@ In addition, I have not confirmed the communication performance.
 <h2 id="changes">Changes in configuration files of Open5GS EPC and OAI UE / RAN</h2>
 
 Please refer to the following for building Open5GS and OAI UE / RAN respectively.
-- Open5GS v2.0.22 or later - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
+- Open5GS v2.0.22 or later (v2.0.22 used) - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
 - OAI UE / RAN v1.0.3 - https://gitlab.eurecom.fr/oai/openairinterface5g/-/wikis/l2-nfapi-simulator/l2-nfapi-simulator-w-S1-same-machine
 
 <h3 id="changes_cp">Changes in configuration files of Open5GS EPC C-Plane</h3>
@@ -602,7 +602,7 @@ ifconfig lo: 127.0.0.2 netmask 255.0.0.0 up
 <h2 id="build">Build Open5GS and OAI UE / RAN</h2>
 
 Please refer to the following for building Open5GS and OAI UE / RAN respectively.
-- Open5GS v2.0.22 or later - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
+- Open5GS v2.0.22 or later (v2.0.22 used) - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
 - OAI UE / RAN v1.0.3 - https://gitlab.eurecom.fr/oai/openairinterface5g/-/wikis/l2-nfapi-simulator/l2-nfapi-simulator-w-S1-same-machine
 
 Note. Install MongoDB with package manager on Open5GS EPC C-Plane machine.
