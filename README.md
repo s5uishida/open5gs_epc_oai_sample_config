@@ -880,6 +880,6 @@ I would like to thank the excellent developers and all the contributors of Open5
 
 <h2 id="changelog">Changelog (summary)</h2>
 
-- [2022.04.05] Updated to Open5GS v2.4.5.
+- [2022.04.05] Updated to Open5GS v2.4.5 and removed the connection setting to nrf in smf.yaml.
 - [2021.03.09] Updated to Open5GS v2.2.0.
 - [2020.11.24] Initial release.
