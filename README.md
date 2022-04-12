@@ -172,10 +172,14 @@ parameter:
 - `open5gs/install/etc/open5gs/smf.yaml`
 ```diff
 --- smf.yaml.orig       2022-04-05 20:54:46.052056078 +0900
-+++ smf.yaml    2022-04-05 21:05:40.723139829 +0900
-@@ -368,8 +368,8 @@
-       - addr: 127.0.0.4
-         port: 7777
++++ smf.yaml    2022-04-12 22:02:10.553816555 +0900
+@@ -364,12 +364,9 @@
+ # 
+ 
+ smf:
+-    sbi:
+-      - addr: 127.0.0.4
+-        port: 7777
      pfcp:
 -      - addr: 127.0.0.4
 -      - addr: ::1
@@ -184,7 +188,7 @@ parameter:
      gtpc:
        - addr: 127.0.0.4
        - addr: ::1
-@@ -378,7 +378,11 @@
+@@ -378,7 +375,11 @@
        - addr: ::1
      subnet:
        - addr: 10.45.0.1/16
@@ -197,7 +201,7 @@ parameter:
      dns:
        - 8.8.8.8
        - 8.8.4.4
-@@ -425,12 +429,6 @@
+@@ -425,12 +426,6 @@
  #          l_onoff: true
  #          l_linger: 10
  #
@@ -210,7 +214,7 @@ parameter:
  
  #
  # upf:
-@@ -486,7 +484,12 @@
+@@ -486,7 +481,12 @@
  #
  upf:
      pfcp:
@@ -880,6 +884,6 @@ I would like to thank the excellent developers and all the contributors of Open5
 
 <h2 id="changelog">Changelog (summary)</h2>
 
-- [2022.04.05] Updated to Open5GS v2.4.5 and removed the connection setting to nrf in smf.yaml.
+- [2022.04.05] Updated to Open5GS v2.4.5 and removed the connection setting to NRF in smf.yaml.
 - [2021.03.09] Updated to Open5GS v2.2.0.
 - [2020.11.24] Initial release.
