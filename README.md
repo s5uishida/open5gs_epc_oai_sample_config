@@ -16,6 +16,7 @@ This briefly describes the overall and configuration files.
     - [Changes in configuration files of UE](#changes_ue)
     - [Changes in configuration files of RAN](#changes_ran)
 - [Network settings of Open5GS EPC and OAI UE / RAN](#network_settings)
+  - [Network settings of Open5GS EPC C-Plane](#network_settings_cp)
   - [Network settings of Open5GS EPC U-Plane1](#network_settings_up1)
   - [Network settings of Open5GS EPC U-Plane2](#network_settings_up2)
   - [Network settings of OAI UE / RAN](#network_settings_oai)
@@ -46,15 +47,15 @@ The built simulation environment is as follows.
 Note. The PDN end-point addresses assigned to `oipX` TUNnel interfaces are not always in the order shown in the figure above.
 
 The EPC / UE / RAN used are as follows.
-- EPC - Open5GS v2.4.5 - https://github.com/open5gs/open5gs
+- EPC - Open5GS v2.4.7 - https://github.com/open5gs/open5gs
 - UE / RAN - OpenAirInterface(OAI) v1.0.3 - https://gitlab.eurecom.fr/oai/openairinterface5g/-/tree/v1.0.3
 
 Each VMs are as follows.  
 | VM # | SW & Role | IP address | OS | Memory (Min) | HDD (Min) |
 | --- | --- | --- | --- | --- | --- |
-| VM1 | Open5GS EPC C-Plane | 192.168.0.111/24 | Ubuntu 20.04 | 1GB | 20GB |
-| VM2 | Open5GS EPC U-Plane1  | 192.168.0.112/24 | Ubuntu 20.04 | 1GB | 20GB |
-| VM3 | Open5GS EPC U-Plane2  | 192.168.0.113/24 | Ubuntu 20.04 | 1GB | 20GB |
+| VM1 | Open5GS EPC C-Plane | 192.168.0.111/24 <br> 192.168.0.112/24 | Ubuntu 20.04 | 1GB | 20GB |
+| VM2 | Open5GS EPC U-Plane1  | 192.168.0.113/24 <br> 192.168.0.114/24 | Ubuntu 20.04 | 1GB | 20GB |
+| VM3 | Open5GS EPC U-Plane2  | 192.168.0.115/24 <br> 192.168.0.116/24 | Ubuntu 20.04 | 1GB | 20GB |
 | VM4 | OpenAirInterface UE / RAN | 192.168.0.120/24 | Ubuntu 18.04 | 2GB | 40GB |
 
 OAI UE / RAN cannot be built on Ubuntu 20.04, so build it on Ubuntu 18.04.
@@ -87,7 +88,7 @@ In addition, I have not confirmed the communication performance.
 <h2 id="changes">Changes in configuration files of Open5GS EPC and OAI UE / RAN</h2>
 
 Please refer to the following for building Open5GS and OAI UE / RAN respectively.
-- Open5GS v2.4.5 - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
+- Open5GS v2.4.7 - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
 - OAI UE / RAN v1.0.3 - https://gitlab.eurecom.fr/oai/openairinterface5g/-/wikis/l2-nfapi-simulator/l2-nfapi-simulator-w-S1-same-machine
 
 <h3 id="changes_cp">Changes in configuration files of Open5GS EPC C-Plane</h3>
@@ -145,8 +146,8 @@ parameter:
 ```
 - `open5gs/install/etc/open5gs/sgwc.yaml`
 ```diff
---- sgwc.yaml.orig      2022-04-05 20:54:45.991058734 +0900
-+++ sgwc.yaml   2022-04-05 21:02:30.385541611 +0900
+--- sgwc.yaml.orig      2022-06-04 19:47:04.920150927 +0900
++++ sgwc.yaml   2022-06-04 20:12:49.514600761 +0900
 @@ -69,7 +69,7 @@
      gtpc:
        - addr: 127.0.0.3
@@ -161,9 +162,9 @@ parameter:
  sgwu:
      pfcp:
 -      - addr: 127.0.0.6
-+      - addr: 192.168.0.112
-+        apn: [internet, internet2]
 +      - addr: 192.168.0.113
++        apn: [internet, internet2]
++      - addr: 192.168.0.115
 +        apn: ims
  
  #
@@ -171,10 +172,10 @@ parameter:
 ```
 - `open5gs/install/etc/open5gs/smf.yaml`
 ```diff
---- smf.yaml.orig       2022-04-05 20:54:46.052056078 +0900
-+++ smf.yaml    2022-04-12 22:02:10.553816555 +0900
-@@ -364,12 +364,9 @@
- # 
+--- smf.yaml.orig       2022-06-04 19:47:04.977151107 +0900
++++ smf.yaml    2022-06-04 23:09:08.094446920 +0900
+@@ -377,21 +377,19 @@
+ #
  
  smf:
 -    sbi:
@@ -183,13 +184,14 @@ parameter:
      pfcp:
 -      - addr: 127.0.0.4
 -      - addr: ::1
-+      - addr: 192.168.0.111
-+        port: 8806
++      - addr: 192.168.0.112
      gtpc:
        - addr: 127.0.0.4
-       - addr: ::1
-@@ -378,7 +375,11 @@
-       - addr: ::1
+-      - addr: ::1
+     gtpu:
+-      - addr: 127.0.0.4
+-      - addr: ::1
++      - addr: 192.168.0.112
      subnet:
        - addr: 10.45.0.1/16
 -      - addr: 2001:db8:cafe::1/48
@@ -201,7 +203,7 @@ parameter:
      dns:
        - 8.8.8.8
        - 8.8.4.4
-@@ -425,12 +426,6 @@
+@@ -440,12 +438,6 @@
  #          l_onoff: true
  #          l_linger: 10
  #
@@ -214,16 +216,14 @@ parameter:
  
  #
  # upf:
-@@ -486,7 +481,12 @@
+@@ -501,7 +493,10 @@
  #
  upf:
      pfcp:
 -      - addr: 127.0.0.7
-+      - addr: 192.168.0.112
-+        port: 8806
++      - addr: 192.168.0.114
 +        dnn: [internet, internet2]
-+      - addr: 192.168.0.113
-+        port: 8806
++      - addr: 192.168.0.116
 +        dnn: ims
  
  #
@@ -234,17 +234,17 @@ parameter:
 
 - `open5gs/install/etc/open5gs/sgwu.yaml`
 ```diff
---- sgwu.yaml.orig      2022-04-05 20:55:38.217952618 +0900
-+++ sgwu.yaml   2022-04-05 21:08:57.219830125 +0900
+--- sgwu.yaml.orig      2022-06-04 19:55:34.619319944 +0900
++++ sgwu.yaml   2022-06-04 20:26:52.317836255 +0900
 @@ -98,9 +98,9 @@
  #
  sgwu:
      pfcp:
 -      - addr: 127.0.0.6
-+      - addr: 192.168.0.112
++      - addr: 192.168.0.113
      gtpu:
 -      - addr: 127.0.0.6
-+      - addr: 192.168.0.112
++      - addr: 192.168.0.113
  
  #
  # sgwc:
@@ -252,16 +252,16 @@ parameter:
 - `open5gs/install/etc/open5gs/upf.yaml`
 ```diff
 --- upf.yaml.orig       2022-04-05 20:55:38.304953273 +0900
-+++ upf.yaml    2022-04-05 21:10:07.533220547 +0900
-@@ -166,12 +166,17 @@
++++ upf.yaml    2022-06-04 20:28:17.477289334 +0900
+@@ -166,12 +166,16 @@
  #
  upf:
      pfcp:
 -      - addr: 127.0.0.7
-+      - addr: 192.168.0.112
-+        port: 8806
++      - addr: 192.168.0.114
      gtpu:
-       - addr: 127.0.0.7
+-      - addr: 127.0.0.7
++      - addr: 192.168.0.114
      subnet:
        - addr: 10.45.0.1/16
 -      - addr: 2001:db8:cafe::1/48
@@ -279,17 +279,17 @@ parameter:
 
 - `open5gs/install/etc/open5gs/sgwu.yaml`
 ```diff
---- sgwu.yaml.orig      2022-04-05 20:56:57.897902607 +0900
-+++ sgwu.yaml   2022-04-05 21:11:13.846625825 +0900
+--- sgwu.yaml.orig      2022-06-04 20:03:06.617169084 +0900
++++ sgwu.yaml   2022-06-04 20:34:13.096027189 +0900
 @@ -98,9 +98,9 @@
  #
  sgwu:
      pfcp:
 -      - addr: 127.0.0.6
-+      - addr: 192.168.0.113
++      - addr: 192.168.0.115
      gtpu:
 -      - addr: 127.0.0.6
-+      - addr: 192.168.0.113
++      - addr: 192.168.0.115
  
  #
  # sgwc:
@@ -297,16 +297,16 @@ parameter:
 - `open5gs/install/etc/open5gs/upf.yaml`
 ```diff
 --- upf.yaml.orig       2022-04-05 20:56:57.984902990 +0900
-+++ upf.yaml    2022-04-05 21:12:25.214913920 +0900
-@@ -166,12 +166,14 @@
++++ upf.yaml    2022-06-04 20:34:20.489022605 +0900
+@@ -166,12 +166,13 @@
  #
  upf:
      pfcp:
 -      - addr: 127.0.0.7
-+      - addr: 192.168.0.113
-+        port: 8806
++      - addr: 192.168.0.116
      gtpu:
-       - addr: 127.0.0.7
+-      - addr: 127.0.0.7
++      - addr: 192.168.0.116
      subnet:
 -      - addr: 10.45.0.1/16
 -      - addr: 2001:db8:cafe::1/48
@@ -567,6 +567,15 @@ parameter:
 
 <h2 id="network_settings">Network settings of Open5GS EPC and OAI UE / RAN</h2>
 
+<h3 id="network_settings_cp">Network settings of Open5GS EPC C-Plane</h3>
+
+Add IP address for SMF(PGW-C).
+```
+ip addr add 192.168.0.112/24 dev enp0s8
+```
+**Note. `enp0s8` is the network interface of `192.168.0.0/24` in my VirtualBox environment.
+Please change it according to your environment.**
+
 <h3 id="network_settings_up1">Network settings of Open5GS EPC U-Plane1</h3>
 
 First, uncomment the next line in the `/etc/sysctl.conf` file and reflect it in the OS.
@@ -576,8 +585,10 @@ net.ipv4.ip_forward=1
 ```
 # sysctl -p
 ```
-Next, configure the TUNnel interface and NAPT.
+Next, add IP address for UPF(PGW-U) and configure the TUNnel interface and NAPT.
 ```
+ip addr add 192.168.0.114/24 dev enp0s8
+
 ip tuntap add name ogstun mode tun
 ip addr add 10.45.0.1/16 dev ogstun
 ip link set ogstun up
@@ -600,8 +611,10 @@ net.ipv4.ip_forward=1
 ```
 # sysctl -p
 ```
-Next, configure the TUNnel interface and NAPT.
+Next, add IP address for UPF(PGW-U) and configure the TUNnel interface and NAPT.
 ```
+ip addr add 192.168.0.116/24 dev enp0s8
+
 ip tuntap add name ogstun3 mode tun
 ip addr add 10.47.0.1/16 dev ogstun3
 ip link set ogstun3 up
@@ -618,7 +631,7 @@ ifconfig lo: 127.0.0.2 netmask 255.0.0.0 up
 <h2 id="build">Build Open5GS and OAI UE / RAN</h2>
 
 Please refer to the following for building Open5GS and OAI UE / RAN respectively.
-- Open5GS v2.4.5 - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
+- Open5GS v2.4.7 - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
 - OAI UE / RAN v1.0.3 - https://gitlab.eurecom.fr/oai/openairinterface5g/-/wikis/l2-nfapi-simulator/l2-nfapi-simulator-w-S1-same-machine
 
 Note. Install MongoDB with package manager on Open5GS EPC C-Plane machine.
@@ -677,10 +690,10 @@ Run OAI eNB and connect to Open5GS EPC.
 ```
 The Open5GS C-Plane log when executed is as follows.
 ```
-04/05 21:34:56.726: [mme] INFO: eNB-S1 accepted[192.168.0.120]:36412 in s1_path module (../src/mme/s1ap-sctp.c:114)
-04/05 21:34:56.726: [mme] INFO: eNB-S1 accepted[192.168.0.120] in master_sm module (../src/mme/mme-sm.c:151)
-04/05 21:34:56.726: [mme] INFO: [Added] Number of eNBs is now 1 (../src/mme/mme-context.c:1826)
-04/05 21:34:56.727: [mme] INFO: eNB-N2[192.168.0.120] max_num_of_ostreams : 2 (../src/mme/mme-sm.c:193)
+06/05 19:10:19.615: [mme] INFO: eNB-S1 accepted[192.168.0.120]:36412 in s1_path module (../src/mme/s1ap-sctp.c:114)
+06/05 19:10:19.615: [mme] INFO: eNB-S1 accepted[192.168.0.120] in master_sm module (../src/mme/mme-sm.c:152)
+06/05 19:10:19.615: [mme] INFO: [Added] Number of eNBs is now 1 (../src/mme/mme-context.c:1837)
+06/05 19:10:19.616: [mme] INFO: eNB-N2[192.168.0.120] max_num_of_ostreams : 2 (../src/mme/mme-sm.c:194)
 ```
 
 <h3 id="run_ue">Run OAI 5 UEs</h3>
@@ -696,151 +709,153 @@ Add `--num-ues 5` to the parameter to use 5 UEs.
 The Open5GS C-Plane log when executed is as follows.
 5 UEs connected to the EPC and each PDU session was established.
 ```
-04/05 21:35:21.934: [mme] INFO: InitialUEMessage (../src/mme/s1ap-handler.c:223)
-04/05 21:35:21.934: [mme] INFO: [Added] Number of eNB-UEs is now 1 (../src/mme/mme-context.c:3292)
-04/05 21:35:21.934: [mme] INFO:     ENB_UE_S1AP_ID[420141] MME_UE_S1AP_ID[1] TAC[1] CellID[0xe0000] (../src/mme/s1ap-handler.c:363)
-04/05 21:35:21.934: [mme] INFO: [001010000000100] Unknown UE by IMSI (../src/mme/mme-context.c:2340)
-04/05 21:35:21.934: [mme] INFO: [Added] Number of MME-UEs is now 1 (../src/mme/mme-context.c:2173)
-04/05 21:35:21.934: [emm] INFO: [] Attach request (../src/mme/emm-sm.c:203)
-04/05 21:35:21.934: [emm] INFO:     IMSI[001010000000100] (../src/mme/emm-handler.c:188)
-04/05 21:35:21.975: [mme] INFO: [Added] Number of MME-Sessions is now 1 (../src/mme/mme-context.c:3304)
-04/05 21:35:21.976: [sgwc] INFO: [Added] Number of SGWC-UEs is now 1 (../src/sgwc/context.c:210)
-04/05 21:35:21.976: [sgwc] INFO: [Added] Number of SGWC-Sessions is now 1 (../src/sgwc/context.c:863)
-04/05 21:35:21.978: [gtp] INFO: gtp_connect() [127.0.0.4]:2123 (../lib/gtp/path.c:60)
-04/05 21:35:21.978: [smf] INFO: [Added] Number of SMF-UEs is now 1 (../src/smf/context.c:827)
-04/05 21:35:21.979: [smf] INFO: [Added] Number of SMF-Sessions is now 1 (../src/smf/context.c:2777)
-04/05 21:35:21.979: [smf] INFO: UE IMSI[001010000000100] APN[internet] IPv4[10.45.0.2] IPv6[] (../src/smf/s5c-handler.c:224)
-04/05 21:35:21.983: [gtp] INFO: gtp_connect() [127.0.0.7]:2152 (../lib/gtp/path.c:60)
-04/05 21:35:22.215: [emm] INFO: [001010000000100] Attach complete (../src/mme/emm-sm.c:1018)
-04/05 21:35:22.216: [emm] INFO:     IMSI[001010000000100] (../src/mme/emm-handler.c:237)
-04/05 21:35:22.216: [emm] INFO:     UTC [2022-04-05T12:35:22] Timezone[0]/DST[0] (../src/mme/emm-handler.c:243)
-04/05 21:35:22.217: [emm] INFO:     LOCAL [2022-04-05T21:35:22] Timezone[32400]/DST[0] (../src/mme/emm-handler.c:247)
-04/05 21:35:22.218: [mme] INFO: InitialUEMessage (../src/mme/s1ap-handler.c:223)
-04/05 21:35:22.218: [mme] INFO: [Added] Number of eNB-UEs is now 2 (../src/mme/mme-context.c:3292)
-04/05 21:35:22.219: [mme] INFO:     ENB_UE_S1AP_ID[16398672] MME_UE_S1AP_ID[2] TAC[1] CellID[0xe0000] (../src/mme/s1ap-handler.c:363)
-04/05 21:35:22.220: [mme] INFO: [001010000000101] Unknown UE by IMSI (../src/mme/mme-context.c:2340)
-04/05 21:35:22.220: [mme] INFO: [Added] Number of MME-UEs is now 2 (../src/mme/mme-context.c:2173)
-04/05 21:35:22.220: [emm] INFO: [] Attach request (../src/mme/emm-sm.c:203)
-04/05 21:35:22.221: [emm] INFO:     IMSI[001010000000101] (../src/mme/emm-handler.c:188)
-04/05 21:35:22.278: [mme] INFO: [Added] Number of MME-Sessions is now 2 (../src/mme/mme-context.c:3304)
-04/05 21:35:22.278: [sgwc] INFO: [Added] Number of SGWC-UEs is now 2 (../src/sgwc/context.c:210)
-04/05 21:35:22.279: [sgwc] INFO: [Added] Number of SGWC-Sessions is now 2 (../src/sgwc/context.c:863)
-04/05 21:35:22.281: [smf] INFO: [Added] Number of SMF-UEs is now 2 (../src/smf/context.c:827)
-04/05 21:35:22.281: [smf] INFO: [Added] Number of SMF-Sessions is now 2 (../src/smf/context.c:2777)
-04/05 21:35:22.281: [smf] INFO: UE IMSI[001010000000101] APN[internet2] IPv4[10.46.0.2] IPv6[] (../src/smf/s5c-handler.c:224)
-04/05 21:35:22.535: [mme] INFO: InitialUEMessage (../src/mme/s1ap-handler.c:223)
-04/05 21:35:22.536: [mme] INFO: [Added] Number of eNB-UEs is now 3 (../src/mme/mme-context.c:3292)
-04/05 21:35:22.536: [mme] INFO:     ENB_UE_S1AP_ID[7773174] MME_UE_S1AP_ID[3] TAC[1] CellID[0xe0000] (../src/mme/s1ap-handler.c:363)
-04/05 21:35:22.537: [mme] INFO: [001010000000102] Unknown UE by IMSI (../src/mme/mme-context.c:2340)
-04/05 21:35:22.537: [mme] INFO: [Added] Number of MME-UEs is now 3 (../src/mme/mme-context.c:2173)
-04/05 21:35:22.538: [emm] INFO: [] Attach request (../src/mme/emm-sm.c:203)
-04/05 21:35:22.538: [emm] INFO:     IMSI[001010000000102] (../src/mme/emm-handler.c:188)
-04/05 21:35:22.543: [emm] INFO: [001010000000101] Attach complete (../src/mme/emm-sm.c:1018)
-04/05 21:35:22.543: [emm] INFO:     IMSI[001010000000101] (../src/mme/emm-handler.c:237)
-04/05 21:35:22.544: [emm] INFO:     UTC [2022-04-05T12:35:22] Timezone[0]/DST[0] (../src/mme/emm-handler.c:243)
-04/05 21:35:22.544: [emm] INFO:     LOCAL [2022-04-05T21:35:22] Timezone[32400]/DST[0] (../src/mme/emm-handler.c:247)
-04/05 21:35:22.545: [mme] INFO: InitialUEMessage (../src/mme/s1ap-handler.c:223)
-04/05 21:35:22.546: [mme] INFO: [Added] Number of eNB-UEs is now 4 (../src/mme/mme-context.c:3292)
-04/05 21:35:22.546: [mme] INFO:     ENB_UE_S1AP_ID[10104933] MME_UE_S1AP_ID[4] TAC[1] CellID[0xe0000] (../src/mme/s1ap-handler.c:363)
-04/05 21:35:22.547: [mme] INFO: [001010000000103] Unknown UE by IMSI (../src/mme/mme-context.c:2340)
-04/05 21:35:22.547: [mme] INFO: [Added] Number of MME-UEs is now 4 (../src/mme/mme-context.c:2173)
-04/05 21:35:22.547: [emm] INFO: [] Attach request (../src/mme/emm-sm.c:203)
-04/05 21:35:22.547: [emm] INFO:     IMSI[001010000000103] (../src/mme/emm-handler.c:188)
-04/05 21:35:22.577: [mme] INFO: [Added] Number of MME-Sessions is now 3 (../src/mme/mme-context.c:3304)
-04/05 21:35:22.578: [sgwc] INFO: [Added] Number of SGWC-UEs is now 3 (../src/sgwc/context.c:210)
-04/05 21:35:22.578: [sgwc] INFO: [Added] Number of SGWC-Sessions is now 3 (../src/sgwc/context.c:863)
-04/05 21:35:22.579: [smf] INFO: [Added] Number of SMF-UEs is now 3 (../src/smf/context.c:827)
-04/05 21:35:22.579: [smf] INFO: [Added] Number of SMF-Sessions is now 3 (../src/smf/context.c:2777)
-04/05 21:35:22.579: [smf] INFO: UE IMSI[001010000000103] APN[ims] IPv4[10.47.0.2] IPv6[] (../src/smf/s5c-handler.c:224)
-04/05 21:35:22.589: [mme] INFO: [Added] Number of MME-Sessions is now 4 (../src/mme/mme-context.c:3304)
-04/05 21:35:22.589: [sgwc] INFO: [Added] Number of SGWC-UEs is now 4 (../src/sgwc/context.c:210)
-04/05 21:35:22.589: [sgwc] INFO: [Added] Number of SGWC-Sessions is now 4 (../src/sgwc/context.c:863)
-04/05 21:35:22.591: [smf] INFO: [Added] Number of SMF-UEs is now 4 (../src/smf/context.c:827)
-04/05 21:35:22.591: [smf] INFO: [Added] Number of SMF-Sessions is now 4 (../src/smf/context.c:2777)
-04/05 21:35:22.591: [smf] INFO: UE IMSI[001010000000102] APN[internet2] IPv4[10.46.0.3] IPv6[] (../src/smf/s5c-handler.c:224)
-04/05 21:35:22.823: [emm] INFO: [001010000000103] Attach complete (../src/mme/emm-sm.c:1018)
-04/05 21:35:22.824: [emm] INFO:     IMSI[001010000000103] (../src/mme/emm-handler.c:237)
-04/05 21:35:22.825: [emm] INFO:     UTC [2022-04-05T12:35:22] Timezone[0]/DST[0] (../src/mme/emm-handler.c:243)
-04/05 21:35:22.825: [emm] INFO:     LOCAL [2022-04-05T21:35:22] Timezone[32400]/DST[0] (../src/mme/emm-handler.c:247)
-04/05 21:35:22.826: [emm] INFO: [001010000000102] Attach complete (../src/mme/emm-sm.c:1018)
-04/05 21:35:22.827: [emm] INFO:     IMSI[001010000000102] (../src/mme/emm-handler.c:237)
-04/05 21:35:22.828: [emm] INFO:     UTC [2022-04-05T12:35:22] Timezone[0]/DST[0] (../src/mme/emm-handler.c:243)
-04/05 21:35:22.828: [emm] INFO:     LOCAL [2022-04-05T21:35:22] Timezone[32400]/DST[0] (../src/mme/emm-handler.c:247)
-04/05 21:35:22.830: [mme] INFO: InitialUEMessage (../src/mme/s1ap-handler.c:223)
-04/05 21:35:22.831: [mme] INFO: [Added] Number of eNB-UEs is now 5 (../src/mme/mme-context.c:3292)
-04/05 21:35:22.831: [mme] INFO:     ENB_UE_S1AP_ID[3105598] MME_UE_S1AP_ID[5] TAC[1] CellID[0xe0000] (../src/mme/s1ap-handler.c:363)
-04/05 21:35:22.831: [mme] INFO: [001010000000104] Unknown UE by IMSI (../src/mme/mme-context.c:2340)
-04/05 21:35:22.832: [mme] INFO: [Added] Number of MME-UEs is now 5 (../src/mme/mme-context.c:2173)
-04/05 21:35:22.833: [emm] INFO: [] Attach request (../src/mme/emm-sm.c:203)
-04/05 21:35:22.833: [emm] INFO:     IMSI[001010000000104] (../src/mme/emm-handler.c:188)
-04/05 21:35:22.869: [mme] INFO: [Added] Number of MME-Sessions is now 5 (../src/mme/mme-context.c:3304)
-04/05 21:35:22.870: [sgwc] INFO: [Added] Number of SGWC-UEs is now 5 (../src/sgwc/context.c:210)
-04/05 21:35:22.871: [sgwc] INFO: [Added] Number of SGWC-Sessions is now 5 (../src/sgwc/context.c:863)
-04/05 21:35:22.872: [smf] INFO: [Added] Number of SMF-UEs is now 5 (../src/smf/context.c:827)
-04/05 21:35:22.872: [smf] INFO: [Added] Number of SMF-Sessions is now 5 (../src/smf/context.c:2777)
-04/05 21:35:22.872: [smf] INFO: UE IMSI[001010000000104] APN[ims] IPv4[10.47.0.3] IPv6[] (../src/smf/s5c-handler.c:224)
-04/05 21:35:23.111: [emm] INFO: [001010000000104] Attach complete (../src/mme/emm-sm.c:1018)
-04/05 21:35:23.111: [emm] INFO:     IMSI[001010000000104] (../src/mme/emm-handler.c:237)
-04/05 21:35:23.111: [emm] INFO:     UTC [2022-04-05T12:35:23] Timezone[0]/DST[0] (../src/mme/emm-handler.c:243)
-04/05 21:35:23.111: [emm] INFO:     LOCAL [2022-04-05T21:35:23] Timezone[32400]/DST[0] (../src/mme/emm-handler.c:247)
+06/05 19:11:03.431: [mme] INFO: InitialUEMessage (../src/mme/s1ap-handler.c:223)
+06/05 19:11:03.431: [mme] INFO: [Added] Number of eNB-UEs is now 1 (../src/mme/mme-context.c:3489)
+06/05 19:11:03.431: [mme] INFO:     ENB_UE_S1AP_ID[420141] MME_UE_S1AP_ID[1] TAC[1] CellID[0xe0000] (../src/mme/s1ap-handler.c:363)
+06/05 19:11:03.431: [mme] INFO: [001010000000100] Unknown UE by IMSI (../src/mme/mme-context.c:2478)
+06/05 19:11:03.431: [mme] INFO: [Added] Number of MME-UEs is now 1 (../src/mme/mme-context.c:2308)
+06/05 19:11:03.431: [emm] INFO: [] Attach request (../src/mme/emm-sm.c:203)
+06/05 19:11:03.431: [emm] INFO:     IMSI[001010000000100] (../src/mme/emm-handler.c:188)
+06/05 19:11:03.490: [mme] INFO: [Added] Number of MME-Sessions is now 1 (../src/mme/mme-context.c:3501)
+06/05 19:11:03.491: [sgwc] INFO: [Added] Number of SGWC-UEs is now 1 (../src/sgwc/context.c:210)
+06/05 19:11:03.491: [sgwc] INFO: [Added] Number of SGWC-Sessions is now 1 (../src/sgwc/context.c:871)
+06/05 19:11:03.492: [gtp] INFO: gtp_connect() [127.0.0.4]:2123 (../lib/gtp/path.c:60)
+06/05 19:11:03.493: [smf] INFO: [Added] Number of SMF-UEs is now 1 (../src/smf/context.c:876)
+06/05 19:11:03.493: [smf] INFO: [Added] Number of SMF-Sessions is now 1 (../src/smf/context.c:2868)
+06/05 19:11:03.493: [smf] INFO: UE IMSI[001010000000100] APN[internet] IPv4[10.45.0.2] IPv6[] (../src/smf/s5c-handler.c:255)
+06/05 19:11:03.496: [gtp] INFO: gtp_connect() [192.168.0.114]:2152 (../lib/gtp/path.c:60)
+06/05 19:11:03.496: [gtp] INFO: gtp_connect() [127.0.0.4]:2123 (../lib/gtp/path.c:60)
+06/05 19:11:03.751: [emm] INFO: [001010000000100] Attach complete (../src/mme/emm-sm.c:1018)
+06/05 19:11:03.752: [emm] INFO:     IMSI[001010000000100] (../src/mme/emm-handler.c:237)
+06/05 19:11:03.752: [emm] INFO:     UTC [2022-06-05T10:11:03] Timezone[0]/DST[0] (../src/mme/emm-handler.c:243)
+06/05 19:11:03.753: [emm] INFO:     LOCAL [2022-06-05T19:11:03] Timezone[32400]/DST[0] (../src/mme/emm-handler.c:247)
+06/05 19:11:03.754: [mme] INFO: InitialUEMessage (../src/mme/s1ap-handler.c:223)
+06/05 19:11:03.755: [mme] INFO: [Added] Number of eNB-UEs is now 2 (../src/mme/mme-context.c:3489)
+06/05 19:11:03.756: [mme] INFO:     ENB_UE_S1AP_ID[16398672] MME_UE_S1AP_ID[2] TAC[1] CellID[0xe0000] (../src/mme/s1ap-handler.c:363)
+06/05 19:11:03.757: [mme] INFO: [001010000000101] Unknown UE by IMSI (../src/mme/mme-context.c:2478)
+06/05 19:11:03.757: [mme] INFO: [Added] Number of MME-UEs is now 2 (../src/mme/mme-context.c:2308)
+06/05 19:11:03.758: [emm] INFO: [] Attach request (../src/mme/emm-sm.c:203)
+06/05 19:11:03.758: [emm] INFO:     IMSI[001010000000101] (../src/mme/emm-handler.c:188)
+06/05 19:11:03.801: [mme] INFO: [Added] Number of MME-Sessions is now 2 (../src/mme/mme-context.c:3501)
+06/05 19:11:03.802: [sgwc] INFO: [Added] Number of SGWC-UEs is now 2 (../src/sgwc/context.c:210)
+06/05 19:11:03.802: [sgwc] INFO: [Added] Number of SGWC-Sessions is now 2 (../src/sgwc/context.c:871)
+06/05 19:11:03.804: [smf] INFO: [Added] Number of SMF-UEs is now 2 (../src/smf/context.c:876)
+06/05 19:11:03.804: [smf] INFO: [Added] Number of SMF-Sessions is now 2 (../src/smf/context.c:2868)
+06/05 19:11:03.804: [smf] INFO: UE IMSI[001010000000101] APN[internet2] IPv4[10.46.0.2] IPv6[] (../src/smf/s5c-handler.c:255)
+06/05 19:11:03.831: [mme] INFO: InitialUEMessage (../src/mme/s1ap-handler.c:223)
+06/05 19:11:03.831: [mme] INFO: [Added] Number of eNB-UEs is now 3 (../src/mme/mme-context.c:3489)
+06/05 19:11:03.832: [mme] INFO:     ENB_UE_S1AP_ID[7773174] MME_UE_S1AP_ID[3] TAC[1] CellID[0xe0000] (../src/mme/s1ap-handler.c:363)
+06/05 19:11:03.832: [mme] INFO: [001010000000102] Unknown UE by IMSI (../src/mme/mme-context.c:2478)
+06/05 19:11:03.833: [mme] INFO: [Added] Number of MME-UEs is now 3 (../src/mme/mme-context.c:2308)
+06/05 19:11:03.833: [emm] INFO: [] Attach request (../src/mme/emm-sm.c:203)
+06/05 19:11:03.834: [emm] INFO:     IMSI[001010000000102] (../src/mme/emm-handler.c:188)
+06/05 19:11:04.063: [emm] INFO: [001010000000101] Attach complete (../src/mme/emm-sm.c:1018)
+06/05 19:11:04.064: [emm] INFO:     IMSI[001010000000101] (../src/mme/emm-handler.c:237)
+06/05 19:11:04.064: [emm] INFO:     UTC [2022-06-05T10:11:04] Timezone[0]/DST[0] (../src/mme/emm-handler.c:243)
+06/05 19:11:04.064: [emm] INFO:     LOCAL [2022-06-05T19:11:04] Timezone[32400]/DST[0] (../src/mme/emm-handler.c:247)
+06/05 19:11:04.065: [mme] INFO: InitialUEMessage (../src/mme/s1ap-handler.c:223)
+06/05 19:11:04.066: [mme] INFO: [Added] Number of eNB-UEs is now 4 (../src/mme/mme-context.c:3489)
+06/05 19:11:04.066: [mme] INFO:     ENB_UE_S1AP_ID[10104933] MME_UE_S1AP_ID[4] TAC[1] CellID[0xe0000] (../src/mme/s1ap-handler.c:363)
+06/05 19:11:04.067: [mme] INFO: [001010000000103] Unknown UE by IMSI (../src/mme/mme-context.c:2478)
+06/05 19:11:04.067: [mme] INFO: [Added] Number of MME-UEs is now 4 (../src/mme/mme-context.c:2308)
+06/05 19:11:04.068: [emm] INFO: [] Attach request (../src/mme/emm-sm.c:203)
+06/05 19:11:04.068: [emm] INFO:     IMSI[001010000000103] (../src/mme/emm-handler.c:188)
+06/05 19:11:04.085: [mme] INFO: [Added] Number of MME-Sessions is now 3 (../src/mme/mme-context.c:3501)
+06/05 19:11:04.086: [sgwc] INFO: [Added] Number of SGWC-UEs is now 3 (../src/sgwc/context.c:210)
+06/05 19:11:04.086: [sgwc] INFO: [Added] Number of SGWC-Sessions is now 3 (../src/sgwc/context.c:871)
+06/05 19:11:04.088: [smf] INFO: [Added] Number of SMF-UEs is now 3 (../src/smf/context.c:876)
+06/05 19:11:04.088: [smf] INFO: [Added] Number of SMF-Sessions is now 3 (../src/smf/context.c:2868)
+06/05 19:11:04.088: [smf] INFO: UE IMSI[001010000000102] APN[internet2] IPv4[10.46.0.3] IPv6[] (../src/smf/s5c-handler.c:255)
+06/05 19:11:04.114: [mme] INFO: [Added] Number of MME-Sessions is now 4 (../src/mme/mme-context.c:3501)
+06/05 19:11:04.115: [sgwc] INFO: [Added] Number of SGWC-UEs is now 4 (../src/sgwc/context.c:210)
+06/05 19:11:04.115: [sgwc] INFO: [Added] Number of SGWC-Sessions is now 4 (../src/sgwc/context.c:871)
+06/05 19:11:04.116: [smf] INFO: [Added] Number of SMF-UEs is now 4 (../src/smf/context.c:876)
+06/05 19:11:04.116: [smf] INFO: [Added] Number of SMF-Sessions is now 4 (../src/smf/context.c:2868)
+06/05 19:11:04.117: [smf] INFO: UE IMSI[001010000000103] APN[ims] IPv4[10.47.0.2] IPv6[] (../src/smf/s5c-handler.c:255)
+06/05 19:11:04.120: [gtp] INFO: gtp_connect() [192.168.0.116]:2152 (../lib/gtp/path.c:60)
+06/05 19:11:04.343: [emm] INFO: [001010000000102] Attach complete (../src/mme/emm-sm.c:1018)
+06/05 19:11:04.344: [emm] INFO:     IMSI[001010000000102] (../src/mme/emm-handler.c:237)
+06/05 19:11:04.344: [emm] INFO:     UTC [2022-06-05T10:11:04] Timezone[0]/DST[0] (../src/mme/emm-handler.c:243)
+06/05 19:11:04.344: [emm] INFO:     LOCAL [2022-06-05T19:11:04] Timezone[32400]/DST[0] (../src/mme/emm-handler.c:247)
+06/05 19:11:04.346: [emm] INFO: [001010000000103] Attach complete (../src/mme/emm-sm.c:1018)
+06/05 19:11:04.346: [emm] INFO:     IMSI[001010000000103] (../src/mme/emm-handler.c:237)
+06/05 19:11:04.347: [emm] INFO:     UTC [2022-06-05T10:11:04] Timezone[0]/DST[0] (../src/mme/emm-handler.c:243)
+06/05 19:11:04.347: [emm] INFO:     LOCAL [2022-06-05T19:11:04] Timezone[32400]/DST[0] (../src/mme/emm-handler.c:247)
+06/05 19:11:04.348: [mme] INFO: InitialUEMessage (../src/mme/s1ap-handler.c:223)
+06/05 19:11:04.349: [mme] INFO: [Added] Number of eNB-UEs is now 5 (../src/mme/mme-context.c:3489)
+06/05 19:11:04.350: [mme] INFO:     ENB_UE_S1AP_ID[3105598] MME_UE_S1AP_ID[5] TAC[1] CellID[0xe0000] (../src/mme/s1ap-handler.c:363)
+06/05 19:11:04.350: [mme] INFO: [001010000000104] Unknown UE by IMSI (../src/mme/mme-context.c:2478)
+06/05 19:11:04.351: [mme] INFO: [Added] Number of MME-UEs is now 5 (../src/mme/mme-context.c:2308)
+06/05 19:11:04.351: [emm] INFO: [] Attach request (../src/mme/emm-sm.c:203)
+06/05 19:11:04.351: [emm] INFO:     IMSI[001010000000104] (../src/mme/emm-handler.c:188)
+06/05 19:11:04.385: [mme] INFO: [Added] Number of MME-Sessions is now 5 (../src/mme/mme-context.c:3501)
+06/05 19:11:04.385: [sgwc] INFO: [Added] Number of SGWC-UEs is now 5 (../src/sgwc/context.c:210)
+06/05 19:11:04.385: [sgwc] INFO: [Added] Number of SGWC-Sessions is now 5 (../src/sgwc/context.c:871)
+06/05 19:11:04.387: [smf] INFO: [Added] Number of SMF-UEs is now 5 (../src/smf/context.c:876)
+06/05 19:11:04.387: [smf] INFO: [Added] Number of SMF-Sessions is now 5 (../src/smf/context.c:2868)
+06/05 19:11:04.387: [smf] INFO: UE IMSI[001010000000104] APN[ims] IPv4[10.47.0.3] IPv6[] (../src/smf/s5c-handler.c:255)
+06/05 19:11:04.631: [emm] INFO: [001010000000104] Attach complete (../src/mme/emm-sm.c:1018)
+06/05 19:11:04.632: [emm] INFO:     IMSI[001010000000104] (../src/mme/emm-handler.c:237)
+06/05 19:11:04.632: [emm] INFO:     UTC [2022-06-05T10:11:04] Timezone[0]/DST[0] (../src/mme/emm-handler.c:243)
+06/05 19:11:04.633: [emm] INFO:     LOCAL [2022-06-05T19:11:04] Timezone[32400]/DST[0] (../src/mme/emm-handler.c:247)
 ```
 The Open5GS U-Plane1 log when executed is as follows.
 3 GTP-U sessions have been created.
 ```
-04/05 21:35:21.998: [sgwu] INFO: UE F-SEID[CP:0x1 UP:0x1] (../src/sgwu/context.c:144)
-04/05 21:35:21.998: [sgwu] INFO: [Added] Number of SGWU-Sessions is now 1 (../src/sgwu/context.c:149)
-04/05 21:35:22.003: [upf] INFO: [Added] Number of UPF-Sessions is now 1 (../src/upf/context.c:160)
-04/05 21:35:22.003: [gtp] INFO: gtp_connect() [192.168.0.112]:2152 (../lib/gtp/path.c:60)
-04/05 21:35:22.003: [gtp] INFO: gtp_connect() [127.0.0.4]:2152 (../lib/gtp/path.c:60)
-04/05 21:35:22.003: [upf] INFO: UE F-SEID[CP:0x1 UP:0x1] APN[internet] PDN-Type[1] IPv4[10.45.0.2] IPv6[] (../src/upf/context.c:361)
-04/05 21:35:22.004: [gtp] INFO: gtp_connect() [127.0.0.7]:2152 (../lib/gtp/path.c:60)
-04/05 21:35:22.238: [gtp] INFO: gtp_connect() [192.168.0.120]:2152 (../lib/gtp/path.c:60)
-04/05 21:35:22.300: [sgwu] INFO: UE F-SEID[CP:0x2 UP:0x2] (../src/sgwu/context.c:144)
-04/05 21:35:22.301: [sgwu] INFO: [Added] Number of SGWU-Sessions is now 2 (../src/sgwu/context.c:149)
-04/05 21:35:22.304: [upf] INFO: [Added] Number of UPF-Sessions is now 2 (../src/upf/context.c:160)
-04/05 21:35:22.305: [upf] INFO: UE F-SEID[CP:0x2 UP:0x2] APN[internet2] PDN-Type[1] IPv4[10.46.0.2] IPv6[] (../src/upf/context.c:361)
-04/05 21:35:22.611: [sgwu] INFO: UE F-SEID[CP:0x3 UP:0x4] (../src/sgwu/context.c:144)
-04/05 21:35:22.611: [sgwu] INFO: [Added] Number of SGWU-Sessions is now 3 (../src/sgwu/context.c:149)
-04/05 21:35:22.614: [upf] INFO: [Added] Number of UPF-Sessions is now 3 (../src/upf/context.c:160)
-04/05 21:35:22.615: [upf] INFO: UE F-SEID[CP:0x3 UP:0x4] APN[internet2] PDN-Type[1] IPv4[10.46.0.3] IPv6[] (../src/upf/context.c:361)
+06/05 19:11:03.453: [sgwu] INFO: UE F-SEID[CP:0x1 UP:0x1] (../src/sgwu/context.c:157)
+06/05 19:11:03.453: [sgwu] INFO: [Added] Number of SGWU-Sessions is now 1 (../src/sgwu/context.c:162)
+06/05 19:11:03.457: [upf] INFO: [Added] Number of UPF-Sessions is now 1 (../src/upf/context.c:178)
+06/05 19:11:03.457: [gtp] INFO: gtp_connect() [192.168.0.113]:2152 (../lib/gtp/path.c:60)
+06/05 19:11:03.457: [gtp] INFO: gtp_connect() [192.168.0.112]:2152 (../lib/gtp/path.c:60)
+06/05 19:11:03.457: [upf] INFO: UE F-SEID[CP:0x1 UP:0x1] APN[internet] PDN-Type[1] IPv4[10.45.0.2] IPv6[] (../src/upf/context.c:397)
+06/05 19:11:03.458: [gtp] INFO: gtp_connect() [192.168.0.114]:2152 (../lib/gtp/path.c:60)
+06/05 19:11:03.715: [gtp] INFO: gtp_connect() [192.168.0.120]:2152 (../lib/gtp/path.c:60)
+06/05 19:11:03.764: [sgwu] INFO: UE F-SEID[CP:0x2 UP:0x2] (../src/sgwu/context.c:157)
+06/05 19:11:03.764: [sgwu] INFO: [Added] Number of SGWU-Sessions is now 2 (../src/sgwu/context.c:162)
+06/05 19:11:03.768: [upf] INFO: [Added] Number of UPF-Sessions is now 2 (../src/upf/context.c:178)
+06/05 19:11:03.769: [upf] INFO: UE F-SEID[CP:0x2 UP:0x2] APN[internet2] PDN-Type[1] IPv4[10.46.0.2] IPv6[] (../src/upf/context.c:397)
+06/05 19:11:04.048: [sgwu] INFO: UE F-SEID[CP:0x3 UP:0x3] (../src/sgwu/context.c:157)
+06/05 19:11:04.048: [sgwu] INFO: [Added] Number of SGWU-Sessions is now 3 (../src/sgwu/context.c:162)
+06/05 19:11:04.052: [upf] INFO: [Added] Number of UPF-Sessions is now 3 (../src/upf/context.c:178)
+06/05 19:11:04.053: [upf] INFO: UE F-SEID[CP:0x3 UP:0x3] APN[internet2] PDN-Type[1] IPv4[10.46.0.3] IPv6[] (../src/upf/context.c:397)
 ```
 The Open5GS U-Plane2 log when executed is as follows.
 2 GTP-U sessions have been created.
 ```
-04/05 21:35:22.525: [sgwu] INFO: UE F-SEID[CP:0x1 UP:0x3] (../src/sgwu/context.c:144)
-04/05 21:35:22.525: [sgwu] INFO: [Added] Number of SGWU-Sessions is now 1 (../src/sgwu/context.c:149)
-04/05 21:35:22.528: [upf] INFO: [Added] Number of UPF-Sessions is now 1 (../src/upf/context.c:160)
-04/05 21:35:22.529: [gtp] INFO: gtp_connect() [192.168.0.113]:2152 (../lib/gtp/path.c:60)
-04/05 21:35:22.529: [gtp] INFO: gtp_connect() [127.0.0.4]:2152 (../lib/gtp/path.c:60)
-04/05 21:35:22.529: [upf] INFO: UE F-SEID[CP:0x1 UP:0x3] APN[ims] PDN-Type[1] IPv4[10.47.0.2] IPv6[] (../src/upf/context.c:361)
-04/05 21:35:22.530: [gtp] INFO: gtp_connect() [127.0.0.7]:2152 (../lib/gtp/path.c:60)
-04/05 21:35:22.772: [gtp] INFO: gtp_connect() [192.168.0.120]:2152 (../lib/gtp/path.c:60)
-04/05 21:35:22.817: [sgwu] INFO: UE F-SEID[CP:0x2 UP:0x5] (../src/sgwu/context.c:144)
-04/05 21:35:22.818: [sgwu] INFO: [Added] Number of SGWU-Sessions is now 2 (../src/sgwu/context.c:149)
-04/05 21:35:22.821: [upf] INFO: [Added] Number of UPF-Sessions is now 2 (../src/upf/context.c:160)
-04/05 21:35:22.822: [upf] INFO: UE F-SEID[CP:0x2 UP:0x5] APN[ims] PDN-Type[1] IPv4[10.47.0.3] IPv6[] (../src/upf/context.c:361)
+06/05 19:11:04.090: [sgwu] INFO: UE F-SEID[CP:0x1 UP:0x4] (../src/sgwu/context.c:157)
+06/05 19:11:04.090: [sgwu] INFO: [Added] Number of SGWU-Sessions is now 1 (../src/sgwu/context.c:162)
+06/05 19:11:04.094: [upf] INFO: [Added] Number of UPF-Sessions is now 1 (../src/upf/context.c:178)
+06/05 19:11:04.094: [gtp] INFO: gtp_connect() [192.168.0.115]:2152 (../lib/gtp/path.c:60)
+06/05 19:11:04.094: [gtp] INFO: gtp_connect() [192.168.0.112]:2152 (../lib/gtp/path.c:60)
+06/05 19:11:04.094: [upf] INFO: UE F-SEID[CP:0x1 UP:0x4] APN[ims] PDN-Type[1] IPv4[10.47.0.2] IPv6[] (../src/upf/context.c:397)
+06/05 19:11:04.095: [gtp] INFO: gtp_connect() [192.168.0.116]:2152 (../lib/gtp/path.c:60)
+06/05 19:11:04.323: [gtp] INFO: gtp_connect() [192.168.0.120]:2152 (../lib/gtp/path.c:60)
+06/05 19:11:04.360: [sgwu] INFO: UE F-SEID[CP:0x2 UP:0x5] (../src/sgwu/context.c:157)
+06/05 19:11:04.361: [sgwu] INFO: [Added] Number of SGWU-Sessions is now 2 (../src/sgwu/context.c:162)
+06/05 19:11:04.365: [upf] INFO: [Added] Number of UPF-Sessions is now 2 (../src/upf/context.c:178)
+06/05 19:11:04.366: [upf] INFO: UE F-SEID[CP:0x2 UP:0x5] APN[ims] PDN-Type[1] IPv4[10.47.0.3] IPv6[] (../src/upf/context.c:397)
 ```
 The result of `ip addr show` on VM4 (OAI UE) is as follows.
 ```
 # ip addr show
 ...
-68: oip1: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 100
+20: oip1: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 100
     link/generic 00:00:00:00:00:00:00:00 brd 00:00:00:00:00:00:00:00
     inet 10.45.0.2/8 brd 10.255.255.255 scope global oip1
        valid_lft forever preferred_lft forever
-69: oip2: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 100
+21: oip2: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 100
     link/generic 00:00:00:00:00:00:00:00 brd 00:00:00:00:00:00:00:00
     inet 10.46.0.2/8 brd 10.255.255.255 scope global oip2
        valid_lft forever preferred_lft forever
-70: oip3: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 100
+22: oip3: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 100
     link/generic 00:00:00:00:00:00:00:00 brd 00:00:00:00:00:00:00:00
     inet 10.46.0.3/8 brd 10.255.255.255 scope global oip3
        valid_lft forever preferred_lft forever
-71: oip4: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 100
+23: oip4: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 100
     link/generic 00:00:00:00:00:00:00:00 brd 00:00:00:00:00:00:00:00
     inet 10.47.0.2/8 brd 10.255.255.255 scope global oip4
        valid_lft forever preferred_lft forever
-72: oip5: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 100
+24: oip5: <BROADCAST,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 100
     link/generic 00:00:00:00:00:00:00:00 brd 00:00:00:00:00:00:00:00
     inet 10.47.0.3/8 brd 10.255.255.255 scope global oip5
        valid_lft forever preferred_lft forever
@@ -857,22 +872,22 @@ Execute `tcpdump` on VM2 (U-Plane1) and check that the packet goes through `if=o
 - `ping google.com` on VM4 (UE0)
 ```
 # ping google.com -I oip1 -n
-PING google.com (142.250.196.142) from 10.45.0.2 oip1: 56(84) bytes of data.
-64 bytes from 142.250.196.142: icmp_seq=1 ttl=61 time=67.5 ms
-64 bytes from 142.250.196.142: icmp_seq=2 ttl=61 time=64.0 ms
-64 bytes from 142.250.196.142: icmp_seq=3 ttl=61 time=62.6 ms
+PING google.com (142.251.42.206) from 10.45.0.2 oip1: 56(84) bytes of data.
+64 bytes from 142.251.42.206: icmp_seq=1 ttl=61 time=63.9 ms
+64 bytes from 142.251.42.206: icmp_seq=2 ttl=61 time=63.8 ms
+64 bytes from 142.251.42.206: icmp_seq=3 ttl=61 time=62.1 ms
 ```
 - Run `tcpdump` on VM2 (U-Plane1)
 ```
 # tcpdump -i ogstun -n
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
 listening on ogstun, link-type RAW (Raw IP), capture size 262144 bytes
-21:50:00.887174 IP 10.45.0.2 > 142.250.196.142: ICMP echo request, id 3675, seq 1, length 64
-21:50:00.908860 IP 142.250.196.142 > 10.45.0.2: ICMP echo reply, id 3675, seq 1, length 64
-21:50:01.887020 IP 10.45.0.2 > 142.250.196.142: ICMP echo request, id 3675, seq 2, length 64
-21:50:01.906903 IP 142.250.196.142 > 10.45.0.2: ICMP echo reply, id 3675, seq 2, length 64
-21:50:02.887305 IP 10.45.0.2 > 142.250.196.142: ICMP echo request, id 3675, seq 3, length 64
-21:50:02.906638 IP 142.250.196.142 > 10.45.0.2: ICMP echo reply, id 3675, seq 3, length 64
+19:19:03.967322 IP 10.45.0.2 > 142.251.42.206: ICMP echo request, id 3126, seq 1, length 64
+19:19:03.984741 IP 142.251.42.206 > 10.45.0.2: ICMP echo reply, id 3126, seq 1, length 64
+19:19:04.966964 IP 10.45.0.2 > 142.251.42.206: ICMP echo request, id 3126, seq 2, length 64
+19:19:04.983959 IP 142.251.42.206 > 10.45.0.2: ICMP echo reply, id 3126, seq 2, length 64
+19:19:05.966983 IP 10.45.0.2 > 142.251.42.206: ICMP echo request, id 3126, seq 3, length 64
+19:19:05.984050 IP 142.251.42.206 > 10.45.0.2: ICMP echo reply, id 3126, seq 3, length 64
 ```
 For `oip2`-`oip5` as well, execute `tcpdump` on each U-Plane and check the packets flowing through `ogstunX`.
 
@@ -884,6 +899,7 @@ I would like to thank the excellent developers and all the contributors of Open5
 
 <h2 id="changelog">Changelog (summary)</h2>
 
+- [2022.06.05] Updated to Open5GS v2.4.7 and assigned IP addresses to each of SMF(PGW-C) and UPF(PGW-U).
 - [2022.04.05] Updated to Open5GS v2.4.5 and removed the connection setting to NRF in smf.yaml.
 - [2021.03.09] Updated to Open5GS v2.2.0.
 - [2020.11.24] Initial release.
