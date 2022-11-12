@@ -646,15 +646,9 @@ Please refer to the following for building Open5GS and OAI UE / RAN respectively
 - Open5GS v2.4.7 - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
 - OAI UE / RAN v1.0.3 - https://gitlab.eurecom.fr/oai/openairinterface5g/-/wikis/l2-nfapi-simulator/l2-nfapi-simulator-w-S1-same-machine
 
-Note. Install MongoDB with package manager on Open5GS EPC C-Plane machine.
-[MongoDB Compass](https://www.mongodb.com/products/compass) is a convenient tool to look at the MongoDB database.
-```
-# apt update
-# apt install mongodb
-# systemctl start mongodb
-# systemctl enable mongodb
-```
+Install MongoDB on Open5GS EPC C-Plane machine.
 It is not necessary to install MongoDB on Open5GS EPC U-Plane machines.
+[MongoDB Compass](https://www.mongodb.com/products/compass) is a convenient tool to look at the MongoDB database.
 
 Note. When building OAI UE / RAN, add `-I` to the parameter of the `build_oai` command for the first time.
 The following is an example of building eNB.
