@@ -5,7 +5,9 @@ This briefly describes the overall and configuration files.
 
 ---
 
-<h2 id="conf_list">List of Sample Configurations</h2>
+<a id="conf_list"></a>
+
+## List of Sample Configurations
 
 1. [One SGW-C/PGW-C, one SGW-U/PGW-U and one APN](https://github.com/s5uishida/open5gs_epc_srsran_sample_config)
 2. One SGW-C/PGW-C, Multiple SGW-Us/PGW-Us and APNs (this article)
@@ -22,14 +24,18 @@ This briefly describes the overall and configuration files.
 13. [VPP-UPF with DPDK](https://github.com/s5uishida/open5gs_5gc_ueransim_vpp_upf_dpdk_sample_config)
 ---
 
-<h2 id="misc">Miscellaneous Notes</h2>
+<a id="misc"></a>
+
+## Miscellaneous Notes
 
 - [Install MongoDB 6.0 and Open5GS WebUI](https://github.com/s5uishida/open5gs_install_mongodb6_webui)
 - [Install MongoDB 4.4.18 on Ubuntu 20.04 for Raspberry Pi 4B](https://github.com/s5uishida/install_mongodb_on_ubuntu_for_rp4b)
 - [A Note for Changing Network Interface of UPF from TUN to TAP in Open5GS](https://github.com/s5uishida/change_from_tun_to_tap_in_open5gs)
 ---
 
-<h2 id="toc">Table of Contents</h2>
+<a id="toc"></a>
+
+## Table of Contents
 
 - [Overview of Open5GS CUPS-enabled EPC Simulation Mobile Network](#overview)
 - [Changes in configuration files of Open5GS EPC and OAI UE / RAN](#changes)
@@ -55,7 +61,9 @@ This briefly describes the overall and configuration files.
 - [Changelog (summary)](#changelog)
 ---
 
-<h2 id="overview">Overview of Open5GS CUPS-enabled EPC Simulation Mobile Network</h2>
+<a id="overview"></a>
+
+## Overview of Open5GS CUPS-enabled EPC Simulation Mobile Network
 
 I created a CUPS-enabled EPC mobile network (Internet reachable) for simulation with the aim of creating an environment in which packets can be sent end-to-end with different PDNs for each APN.
 
@@ -109,13 +117,17 @@ Open5GS EPC U-Plane worked fine on Raspberry Pi 4 Model B. I used [Ubuntu 20.04 
 
 In addition, I have not confirmed the communication performance.
 
-<h2 id="changes">Changes in configuration files of Open5GS EPC and OAI UE / RAN</h2>
+<a id="changes"></a>
+
+## Changes in configuration files of Open5GS EPC and OAI UE / RAN
 
 Please refer to the following for building Open5GS and OAI UE / RAN respectively.
 - Open5GS v2.5.6 (2023.01.13) - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
 - OAI UE / RAN v1.0.3 - https://gitlab.eurecom.fr/oai/openairinterface5g/-/wikis/l2-nfapi-simulator/l2-nfapi-simulator-w-S1-same-machine
 
-<h3 id="changes_cp">Changes in configuration files of Open5GS EPC C-Plane</h3>
+<a id="changes_cp"></a>
+
+### Changes in configuration files of Open5GS EPC C-Plane
 
 The following parameters including APN can be used in the logic that selects SGW-U as the connection destination by PFCP.
 
@@ -258,7 +270,9 @@ parameter:
  # parameter:
 ```
 
-<h3 id="changes_up1">Changes in configuration files of Open5GS EPC U-Plane1</h3>
+<a id="changes_up1"></a>
+
+### Changes in configuration files of Open5GS EPC U-Plane1
 
 - `open5gs/install/etc/open5gs/sgwu.yaml`
 ```diff
@@ -303,7 +317,9 @@ parameter:
          port: 9090
 ```
 
-<h3 id="changes_up2">Changes in configuration files of Open5GS EPC U-Plane2</h3>
+<a id="changes_up2"></a>
+
+### Changes in configuration files of Open5GS EPC U-Plane2
 
 - `open5gs/install/etc/open5gs/sgwu.yaml`
 ```diff
@@ -346,9 +362,13 @@ parameter:
          port: 9090
 ```
 
-<h3 id="changes_oai">Changes in configuration files of OAI UE / RAN</h3>
+<a id="changes_oai"></a>
 
-<h4 id="changes_ue">Changes in configuration files of UE</h4>
+### Changes in configuration files of OAI UE / RAN
+
+<a id="changes_ue"></a>
+
+#### Changes in configuration files of UE
 
 - `ue_folder/ci-scripts/conf_files/ue.nfapi.conf`
 ```diff
@@ -538,7 +558,9 @@ parameter:
      # User controlled PLMN Selector with Access Technology
      UCPLMN_LIST = ();
 ```
-<h4 id="changes_ran">Changes in configuration files of RAN</h4>
+<a id="changes_ran"></a>
+
+#### Changes in configuration files of RAN
 
 - `enb_folder/ci-scripts/conf_files/rcc.band7.tm1.nfapi.conf`
 ```diff
@@ -593,9 +615,13 @@ parameter:
         local_s_portd    = 50011;
 ```
 
-<h2 id="network_settings">Network settings of Open5GS EPC and OAI UE / RAN</h2>
+<a id="network_settings"></a>
 
-<h3 id="network_settings_cp">Network settings of Open5GS EPC C-Plane</h3>
+## Network settings of Open5GS EPC and OAI UE / RAN
+
+<a id="network_settings_cp"></a>
+
+### Network settings of Open5GS EPC C-Plane
 
 Add IP address for SMF(PGW-C).
 ```
@@ -604,7 +630,9 @@ ip addr add 192.168.0.112/24 dev enp0s8
 **Note. `enp0s8` is the network interface of `192.168.0.0/24` in my VirtualBox environment.
 Please change it according to your environment.**
 
-<h3 id="network_settings_up1">Network settings of Open5GS EPC U-Plane1</h3>
+<a id="network_settings_up1"></a>
+
+### Network settings of Open5GS EPC U-Plane1
 
 First, uncomment the next line in the `/etc/sysctl.conf` file and reflect it in the OS.
 ```
@@ -630,7 +658,9 @@ ip link set ogstun2 up
 iptables -t nat -A POSTROUTING -s 10.46.0.0/16 ! -o ogstun2 -j MASQUERADE
 ```
 
-<h3 id="network_settings_up2">Network settings of Open5GS EPC U-Plane2</h3>
+<a id="network_settings_up2"></a>
+
+### Network settings of Open5GS EPC U-Plane2
 
 First, uncomment the next line in the `/etc/sysctl.conf` file and reflect it in the OS.
 ```
@@ -650,13 +680,17 @@ ip link set ogstun3 up
 iptables -t nat -A POSTROUTING -s 10.47.0.0/16 ! -o ogstun3 -j MASQUERADE
 ```
 
-<h3 id="network_settings_oai">Network settings of OAI UE / RAN</h3>
+<a id="network_settings_oai"></a>
+
+### Network settings of OAI UE / RAN
 
 ```
 ifconfig lo: 127.0.0.2 netmask 255.0.0.0 up
 ```
 
-<h2 id="build">Build Open5GS and OAI UE / RAN</h2>
+<a id="build"></a>
+
+## Build Open5GS and OAI UE / RAN
 
 Please refer to the following for building Open5GS and OAI UE / RAN respectively.
 - Open5GS v2.5.6 (2023.01.13) - https://open5gs.org/open5gs/docs/guide/02-building-open5gs-from-sources/
@@ -671,11 +705,15 @@ The following is an example of building eNB.
 ```
 ./build_oai -I --eNB -t ETHERNET -c
 ```
-<h2 id="run">Run Open5GS EPC and OAI UE / RAN</h2>
+<a id="run"></a>
+
+## Run Open5GS EPC and OAI UE / RAN
 
 First run the EPC, then the RAN, and the UE.
 
-<h3 id="run_cp">Run Open5GS EPC C-Plane</h3>
+<a id="run_cp"></a>
+
+### Run Open5GS EPC C-Plane
 
 First, run Open5GS EPC C-Plane.
 
@@ -688,7 +726,9 @@ First, run Open5GS EPC C-Plane.
 ./install/bin/open5gs-pcrfd &
 ```
 
-<h3 id="run_up">Run Open5GS EPC U-Plane1 & U-Plane2</h3>
+<a id="run_up"></a>
+
+### Run Open5GS EPC U-Plane1 & U-Plane2
 
 Next, run Open5GS EPC U-Plane.
 
@@ -703,7 +743,9 @@ Next, run Open5GS EPC U-Plane.
 ./install/bin/open5gs-upfd &
 ```
 
-<h3 id="run_ran">Run OAI RAN</h3>
+<a id="run_ran"></a>
+
+### Run OAI RAN
 
 Run OAI eNB and connect to Open5GS EPC.
 ```
@@ -718,7 +760,9 @@ The Open5GS C-Plane log when executed is as follows.
 01/13 23:10:08.071: [mme] INFO: eNB-S1[192.168.0.120] max_num_of_ostreams : 2 (../src/mme/mme-sm.c:148)
 ```
 
-<h3 id="run_ue">Run OAI 5 UEs</h3>
+<a id="run_ue"></a>
+
+### Run OAI 5 UEs
 
 Run OAI 5 UEs and connect to Open5GS EPC.
 Add `--num-ues 5` to the parameter to use 5 UEs.
@@ -889,11 +933,15 @@ The result of `ip addr show` on VM4 (OAI UE) is as follows.
 ...
 ```
 
-<h2 id="ping">Ping google.com</h2>
+<a id="ping"></a>
+
+## Ping google.com
 
 Specify the TUN interface on VM4 (UE0) and try `ping`.
 
-<h3 id="ping_1">Case for going through PDN 10.45.0.0/16</h3>
+<a id="ping_1"></a>
+
+### Case for going through PDN 10.45.0.0/16
 
 Execute `tcpdump` on VM2 (U-Plane1) and check that the packet goes through `if=ogstun`.
 - `ping google.com` on VM4 (UE0)
@@ -924,7 +972,9 @@ You could now create the end-to-end TUN interfaces on the PDN and send any packe
 In investigating private LTE, I have built a simulation environment and can now use a very useful system for investigating CUPS-enabled EPC and MEC of LTE mobile network.
 I would like to thank the excellent developers and all the contributors of Open5GS and OpenAirInterface.
 
-<h2 id="changelog">Changelog (summary)</h2>
+<a id="changelog"></a>
+
+## Changelog (summary)
 
 - [2023.01.13] Updated to Open5GS v2.5.6.
 - [2022.06.05] Updated to Open5GS v2.4.7 and assigned IP addresses to each of SMF(PGW-C) and UPF(PGW-U).
